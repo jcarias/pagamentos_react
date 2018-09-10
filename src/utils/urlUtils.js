@@ -7,7 +7,8 @@ export const urls = {
         path: "/services/update/:id",
         toolbar: true
     },
-    about: { name: "Sobre", path: "/about", toolbar: true }
+    about: { name: "Sobre", path: "/about", toolbar: true },
+    payments: { name: "Pagamentos", path: "/payments", toolbar: true }
 };
 
 export const urlsToolbar = () => {

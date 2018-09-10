@@ -12,11 +12,9 @@ import {
 } from "@material-ui/core";
 
 import PersonIcon from "@material-ui/icons/PersonRounded";
-import MonetizationIcon from "@material-ui/icons/MonetizationOnRounded";
 import { withStyles } from "@material-ui/core/styles";
 
 import { urls } from "../utils/urlUtils";
-import { formatMoney } from "../utils/StringUtils";
 import {
     fetchServicesYear,
     fetchServicesYearMonth

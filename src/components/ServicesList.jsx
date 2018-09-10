@@ -10,7 +10,7 @@ import {
     Hidden
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { months_pt } from "../utils/dateUtils";
+import { months_pt, getYears } from "../utils/dateUtils";
 import { getWorker } from "../utils/DomainUtils";
 import ServiceListItem from "./ServiceListItem";
 import ServicesTable from "./ServicesTable";
@@ -75,11 +75,6 @@ class ServicesList extends Component {
         this.setState({ deleteDialogOpen: false });
     };
 
-    getYears = () => {
-        let currentYear = this.state.filters.year || new Date().getFullYear();
-        return [currentYear - 1, currentYear, currentYear + 1];
-    };
-
     handleFilterChange = event => {
         if (event) {
             event.preventDefault();
@@ -119,11 +114,16 @@ class ServicesList extends Component {
                                     onChange={this.handleFilterChange}
                                     fullWidth
                                 >
-                                    {this.getYears().map(number => (
-                                        <MenuItem key={number} value={number}>
-                                            {number}
-                                        </MenuItem>
-                                    ))}
+                                    {getYears(this.state.filters.year).map(
+                                        number => (
+                                            <MenuItem
+                                                key={number}
+                                                value={number}
+                                            >
+                                                {number}
+                                            </MenuItem>
+                                        )
+                                    )}
                                 </TextField>
                             </Grid>
                             <Grid item xs={6}>

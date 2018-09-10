@@ -27,7 +27,7 @@ const PaymentsWidget = props => {
     return (
         <React.Fragment>
             <Card>
-                <CardActionArea component={Link} to={urls.services.path}>
+                <CardActionArea component={Link} to={urls.payments.path}>
                     <CardContent className={classes.widgetHeader}>
                         <MonetizationIcon className={classes.widgetMedia} />
                         <Typography
@@ -112,7 +112,7 @@ const PaymentsWidget = props => {
                             </ExpansionPanel>
                         </Grid>
                         <Grid item>
-                            <ServicesYearChart />
+                            <ServicesYearChart services={servicesYearData} />
                         </Grid>
                     </Grid>
                 </CardContent>
@@ -121,7 +121,7 @@ const PaymentsWidget = props => {
                     <Button
                         color="primary"
                         component={Link}
-                        to={urls.services.path}
+                        to={urls.payments.path}
                     >
                         Ver
                     </Button>

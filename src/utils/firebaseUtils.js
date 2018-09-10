@@ -16,4 +16,6 @@ const databaseRef = firebaseDatabase.ref();
 
 export const servicesRef = databaseRef.child("services");
 export const workersRef = databaseRef.child("workers");
+export const paymentsRef = databaseRef.child("payments");
+
 export const auth = firebase.auth();
