@@ -12,22 +12,21 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Divider,
-    Avatar,
-    Input,
     TextField,
-    Hidden
+    Hidden,
+    ExpansionPanelActions
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import AddIcon from "@material-ui/icons/Add";
 
 import { fetchUnpaidServices } from "../../actions/paymentsActions";
 
 import { getWorkerName, computeServicesMetrics } from "../../utils/DomainUtils";
 import { months_pt, getYears } from "../../utils/dateUtils";
-import ServicesTable from "../ServicesTable";
 import UnpaidServicesTable from "../UnpaidServicesTable";
 import { formatMoney } from "../../utils/StringUtils";
 import UnpaidServicesList from "../UnpaidServicesList";
+import ExtraPaymentsList from "./ExtraPaymentsList";
 
 const styles = theme => ({
     root: {
@@ -52,11 +51,17 @@ class PaymentForm extends Component {
             year: "",
             month: "",
             services: {},
-            extras: {},
+            extras: [
+                {
+                    description: "segurança social",
+                    value: 10.0
+                }
+            ],
             total: 0,
             paymentDate: "",
             paymentForm: ""
         };
+        this.handleExtraValueChange = this.handleExtraValueChange.bind(this);
     }
 
     handleChange = event => {
@@ -88,6 +93,31 @@ class PaymentForm extends Component {
 
     componentDidMount = () => {
         this.fetchServices();
+    };
+
+    onAddNewExtraClick = () => {
+        let extras = this.state.extras;
+        extras.push({ description: "", value: 0 });
+        this.setState({ ...this.state, extras: extras });
+    };
+
+    handleExtraValueChange = (index, event) => {
+        let tmpExtras = this.state.extras;
+        let extra = tmpExtras[index];
+        extra[event.target.name] = event.target.value;
+        this.setState({ extras: tmpExtras });
+    };
+
+    computeExtrasTotal = () => {
+        let total = 0.0;
+        this.state.extras.map(extra => (total += Number(extra.value)));
+        return total;
+    };
+
+    handleExtraDelete = index => {
+        let tmpExtras = this.state.extras;
+        tmpExtras.splice(index, 1);
+        this.setState({ extras: tmpExtras });
     };
 
     render() {
@@ -217,7 +247,7 @@ class PaymentForm extends Component {
                         </ExpansionPanel>
                     </Grid>
                     <Grid item xs={12}>
-                        <ExpansionPanel>
+                        <ExpansionPanel defaultExpanded>
                             <ExpansionPanelSummary
                                 expandIcon={<ExpandMoreIcon />}
                             >
@@ -226,17 +256,31 @@ class PaymentForm extends Component {
                                     style={{ flex: 1 }}
                                     color="textSecondary"
                                 >
-                                    Extras
+                                    {this.state.extras.length} Extras
                                 </Typography>
                                 <Typography variant="headline">
-                                    {formatMoney(0)}
+                                    {formatMoney(this.computeExtrasTotal())}
                                 </Typography>
                             </ExpansionPanelSummary>
-                            <Divider />
                             <ExpansionPanelDetails>
-                                Colocar form aqui para inserir extras (SS,
-                                Subsídiosm ...)
+                                <ExtraPaymentsList
+                                    extras={this.state.extras}
+                                    handleValueChange={
+                                        this.handleExtraValueChange
+                                    }
+                                    handleDelete={this.handleExtraDelete}
+                                />
                             </ExpansionPanelDetails>
+                            <ExpansionPanelActions>
+                                <Button
+                                    variant="flat"
+                                    color="primary"
+                                    onClick={this.onAddNewExtraClick}
+                                >
+                                    <AddIcon />
+                                    Adicionar Extra
+                                </Button>
+                            </ExpansionPanelActions>
                         </ExpansionPanel>
                     </Grid>
                     <Grid item xs={12}>
@@ -253,11 +297,45 @@ class PaymentForm extends Component {
                         />
                     </Grid>
                     <Grid item xs={12}>
+                        <FormControl
+                            className={classes.formControl}
+                            fullWidth={true}
+                            required
+                        >
+                            <InputLabel htmlFor="paymentForm">
+                                Forma de Pagamento
+                            </InputLabel>
+                            <Select
+                                required
+                                value={this.state.paymentForm}
+                                onChange={this.handleChange}
+                                inputProps={{
+                                    name: "paymentForm",
+                                    id: "paymentForm"
+                                }}
+                            >
+                                <MenuItem value="">
+                                    <em>Desconhecido</em>
+                                </MenuItem>
+                                <MenuItem value="money">Dinheiro</MenuItem>
+                                <MenuItem value="tranfer">
+                                    Tranferência Bancária
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
                         <div style={{ marginTop: 16, float: "right" }}>
-                            <Button type="submit" color="primary">
+                            <Button
+                                type="submit"
+                                color="primary"
+                                variant="raised"
+                            >
                                 Gravar
                             </Button>
                             <Button
+                                style={{ marginLeft: 16 }}
+                                variant="raised"
                                 color="secondary"
                                 onClick={() => this.props.history.goBack()}
                             >
