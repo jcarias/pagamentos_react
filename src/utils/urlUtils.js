@@ -8,7 +8,12 @@ export const urls = {
         toolbar: true
     },
     about: { name: "Sobre", path: "/about", toolbar: true },
-    payments: { name: "Pagamentos", path: "/payments", toolbar: true }
+    payments: { name: "Pagamentos", path: "/payments", toolbar: true },
+    addPayment: {
+        name: "Criar Novo Pagamento",
+        path: "/payments/add",
+        toolbar: true
+    }
 };
 
 export const urlsToolbar = () => {

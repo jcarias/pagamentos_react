@@ -19,7 +19,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { urls } from "../../utils/urlUtils";
 import { formatMoney } from "../../utils/StringUtils";
 import { calcSubsides } from "../../utils/DomainUtils";
-import ServicesYearChart from "../charts/ServicesYearChart";
 
 const PaymentsWidget = props => {
     const { classes, servicesYearData } = props;
@@ -43,7 +42,7 @@ const PaymentsWidget = props => {
                     <Grid container>
                         <Grid item xs={12}>
                             <Typography variant="subheading" align="center">
-                                Totais do Ano
+                                Totais do Ano {new Date().getFullYear()}
                             </Typography>
                         </Grid>
                         <Grid item xs={6}>
@@ -111,9 +110,6 @@ const PaymentsWidget = props => {
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
                         </Grid>
-                        <Grid item>
-                            <ServicesYearChart services={servicesYearData} />
-                        </Grid>
                     </Grid>
                 </CardContent>
 
@@ -124,6 +120,13 @@ const PaymentsWidget = props => {
                         to={urls.payments.path}
                     >
                         Ver
+                    </Button>
+                    <Button
+                        color="primary"
+                        component={Link}
+                        to={urls.addPayment.path}
+                    >
+                        Criar Novo
                     </Button>
                 </CardActions>
             </Card>

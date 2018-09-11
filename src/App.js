@@ -17,6 +17,7 @@ import ServiceForm from "./components/ServiceForm";
 import HomeToolbar from "./components/HomeToolbar";
 import BackToolbar from "./components/BackToolbar";
 import PaymentsHome from "./components/payments/PaymentsHome";
+import PaymentForm from "./components/payments/PaymentForm";
 
 const theme = createMuiTheme({
     palette: {
@@ -136,10 +137,21 @@ class App extends Component {
                             render={props => <ServiceForm {...props} />}
                         />
                         <Route
+                            exact
                             path={urls.payments.path}
                             render={props => (
                                 <PaymentsHome
                                     workers={workersData}
+                                    {...props}
+                                />
+                            )}
+                        />
+                        <Route
+                            path={urls.addPayment.path}
+                            render={props => (
+                                <PaymentForm
+                                    workers={workersData}
+                                    services={servicesData}
                                     {...props}
                                 />
                             )}

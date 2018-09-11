@@ -1,5 +1,5 @@
-import { paymentsRef } from "../utils/firebaseUtils";
-import { REQUEST, FETCH_PAYMENTS } from "./types";
+import { paymentsRef, servicesRef } from "../utils/firebaseUtils";
+import { REQUEST, FETCH_PAYMENTS, FETCH_UNPAID_SERVICES } from "./types";
 import { clientSideFilter } from "../utils/commonUtils";
 
 export const addPayment = newPayment => async dispatch => {
@@ -7,8 +7,8 @@ export const addPayment = newPayment => async dispatch => {
 };
 
 export const fetchPayments = (workerKey, year, month) => async dispatch => {
-    dispatch({ REQUEST });
-    workersRef.on("value", snapshot => {
+    dispatch({ type: REQUEST });
+    paymentsRef.on("value", snapshot => {
         let retVal = snapshot.val();
 
         if (workerKey) {
@@ -21,7 +21,7 @@ export const fetchPayments = (workerKey, year, month) => async dispatch => {
         if (year) {
             retVal = clientSideFilter(
                 retVal,
-                year =>
+                payment =>
                     !isNaN(Number(payment.year)) &&
                     Number(payment.year) === Number(year)
             );
@@ -29,7 +29,7 @@ export const fetchPayments = (workerKey, year, month) => async dispatch => {
         if (month) {
             retVal = clientSideFilter(
                 retVal,
-                month =>
+                payment =>
                     !isNaN(Number(payment.month)) &&
                     Number(payment.month) === Number(month)
             );
@@ -37,6 +37,45 @@ export const fetchPayments = (workerKey, year, month) => async dispatch => {
 
         dispatch({
             type: FETCH_PAYMENTS,
+            payload: retVal
+        });
+    });
+};
+export const fetchUnpaidServices = (
+    workerKey,
+    year,
+    month
+) => async dispatch => {
+    dispatch({ type: REQUEST });
+
+    servicesRef.on("value", snapshot => {
+        let retVal = snapshot.val();
+
+        retVal = clientSideFilter(retVal, service => !service.paymentDate);
+
+        if (workerKey) {
+            retVal = clientSideFilter(
+                retVal,
+                service => service.worker === workerKey
+            );
+        }
+
+        if (year) {
+            retVal = clientSideFilter(retVal, service => {
+                let date = new Date(service.serviceDate);
+                return date.getFullYear() === year;
+            });
+        }
+
+        if (month !== "" && month !== null && month !== undefined) {
+            retVal = clientSideFilter(retVal, service => {
+                let date = new Date(service.serviceDate);
+                return date.getMonth() === month;
+            });
+        }
+
+        dispatch({
+            type: FETCH_UNPAID_SERVICES,
             payload: retVal
         });
     });

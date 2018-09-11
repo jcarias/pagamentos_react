@@ -5,7 +5,11 @@
  * If it returns "true"  the value is considered, if returns "false" the value is discarded.
  * @returns {object} the filtered object
  */
-export const clientSideFilter = (obj, predicate) =>
-    Object.keys(obj)
+export const clientSideFilter = (obj, predicate) => {
+    if (!obj) {
+        return obj;
+    }
+    return Object.keys(obj)
         .filter(key => predicate(obj[key]))
         .reduce((res, key) => ((res[key] = obj[key]), res), {});
+};

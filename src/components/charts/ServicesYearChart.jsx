@@ -36,7 +36,7 @@ const ServicesYearChart = props => {
 
             data.push(monthData);
         }
-        console.log(data);
+
         return data;
     };
 

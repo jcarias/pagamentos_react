@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
     Grid,
     FormControl,
@@ -19,6 +20,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { withStyles } from "@material-ui/core/styles";
 import { getWorkerName, getWorker } from "../../utils/DomainUtils";
 import { months_pt, getYears } from "../../utils/dateUtils";
+
+import { fetchPayments } from "../../actions/paymentsActions";
 
 const styles = theme => ({
     root: {
@@ -62,32 +65,60 @@ class PaymentsHome extends Component {
     handleChange = event => {
         if (event) {
             event.preventDefault();
-            this.setState({ [event.target.name]: event.target.value });
-            console.log("change");
+            this.setState({ [event.target.name]: event.target.value }, () => {
+                this.props.fetchPayments(
+                    this.state.worker,
+                    this.state.year,
+                    this.state.month
+                );
+            });
         }
     };
 
     clearFilters = () => {
-        this.setState({
-            selWorker: "",
-            selYear: "",
-            selMonth: ""
-        });
+        this.setState(
+            {
+                selWorker: "",
+                selYear: "",
+                selMonth: ""
+            },
+            () => {
+                this.props.fetchPayments(
+                    this.state.worker,
+                    this.state.year,
+                    this.state.month
+                );
+            }
+        );
     };
 
     handleDeleteFilter = key => {
-        this.setState({
-            ...this.state,
-            [key]: ""
-        });
+        this.setState(
+            {
+                ...this.state,
+                [key]: ""
+            },
+            () => {
+                this.props.fetchPayments(
+                    this.state.worker,
+                    this.state.year,
+                    this.state.month
+                );
+            }
+        );
     };
 
     componentDidMount() {
         //Fetch Data here
+        this.props.fetchPayments(
+            this.state.worker,
+            this.state.year,
+            this.state.month
+        );
     }
 
     render() {
-        const { classes, workers } = this.props;
+        const { classes, workers, payments, loading } = this.props;
         const { selWorker, selYear, selMonth } = this.state;
         return (
             <Grid container direction="column">
@@ -293,4 +324,22 @@ class PaymentsHome extends Component {
     }
 }
 
-export default withStyles(styles)(PaymentsHome);
+const mapStateToProps = state => {
+    return {
+        loading: state.PaymentsReducer.loading,
+        payments: state.PaymentsReducer.payments
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchPayments: (worker, year, month) => {
+            dispatch(fetchPayments(worker, year, month));
+        }
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(PaymentsHome));
