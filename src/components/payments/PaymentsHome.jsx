@@ -22,6 +22,7 @@ import { getWorkerName, getWorker } from "../../utils/DomainUtils";
 import { months_pt, getYears } from "../../utils/dateUtils";
 
 import { fetchPayments } from "../../actions/paymentsActions";
+import PaymentsList from "./PaymentsList";
 
 const styles = theme => ({
     root: {
@@ -315,9 +316,13 @@ class PaymentsHome extends Component {
                 </Grid>
                 <Divider />
                 <Grid item>
-                    <Typography variant="display1" align="center">
-                        Nenhum pagamento encontrado.
-                    </Typography>
+                    {payments ? (
+                        <PaymentsList payments={payments} />
+                    ) : (
+                        <Typography variant="display1" align="center">
+                            Nenhum pagamento encontrado.
+                        </Typography>
+                    )}
                 </Grid>
             </Grid>
         );

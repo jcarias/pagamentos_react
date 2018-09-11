@@ -1,9 +1,28 @@
 import { paymentsRef, servicesRef } from "../utils/firebaseUtils";
-import { REQUEST, FETCH_PAYMENTS, FETCH_UNPAID_SERVICES } from "./types";
+import {
+    REQUEST,
+    FETCH_PAYMENTS,
+    FETCH_UNPAID_SERVICES,
+    EDIT_SERVICE
+} from "./types";
 import { clientSideFilter } from "../utils/commonUtils";
 
 export const addPayment = newPayment => async dispatch => {
-    paymentsRef.push().set(newPayment);
+    debugger;
+    var newRef = paymentsRef.push();
+    var paymentKey = newRef.getKey();
+
+    const { paymentDate, services } = newPayment;
+    if (services) {
+        Object.keys(services).map(key => {
+            let service = services[key];
+            service.paymentDate = paymentDate;
+            service.payment = paymentKey;
+            servicesRef.child(key).update(service);
+        });
+    }
+
+    newRef.set(newPayment);
 };
 
 export const fetchPayments = (workerKey, year, month) => async dispatch => {
@@ -79,4 +98,19 @@ export const fetchUnpaidServices = (
             payload: retVal
         });
     });
+};
+
+export const fetchPaymentServices = paymentKey => async dispatch => {
+    dispatch({ type: REQUEST });
+    servicesRef
+        .orderByChild("payment")
+        .equalTo(paymentKey)
+        .on("value", snapshot => {
+            let retVal = snapshot.val();
+
+            dispatch({
+                type: FETCH_UNPAID_SERVICES,
+                payload: retVal
+            });
+        });
 };

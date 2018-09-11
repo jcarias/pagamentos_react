@@ -19,7 +19,7 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 
-import { fetchUnpaidServices } from "../../actions/paymentsActions";
+import { fetchUnpaidServices, addPayment } from "../../actions/paymentsActions";
 
 import { getWorkerName, computeServicesMetrics } from "../../utils/DomainUtils";
 import { months_pt, getYears } from "../../utils/dateUtils";
@@ -51,12 +51,7 @@ class PaymentForm extends Component {
             year: "",
             month: "",
             services: {},
-            extras: [
-                {
-                    description: "segurança social",
-                    value: 10.0
-                }
-            ],
+            extras: [],
             total: 0,
             paymentDate: "",
             paymentForm: ""
@@ -67,22 +62,55 @@ class PaymentForm extends Component {
     handleChange = event => {
         if (event) {
             event.preventDefault();
-            this.setState({ [event.target.name]: event.target.value }, () => {
-                if (
-                    event.target.name === "worker" ||
-                    event.target.name === "year" ||
-                    event.target.name === "month"
-                ) {
-                    this.fetchServices();
+            this.setState(
+                {
+                    [event.target.name]: event.target.value,
+                    total: this.computePaymentTotal()
+                },
+                () => {
+                    if (
+                        event.target.name === "worker" ||
+                        event.target.name === "year" ||
+                        event.target.name === "month"
+                    ) {
+                        this.fetchServices();
+                    }
                 }
-            });
+            );
+        }
+    };
+
+    handleValueChange = event => {
+        if (event) {
+            this.setState({ [event.target.name]: event.target.value });
         }
     };
 
     handleSubmit = event => {
         if (event) {
             event.preventDefault();
-            console.log(this.state);
+            const {
+                worker,
+                year,
+                month,
+                extras,
+                paymentDate,
+                paymentForm
+            } = this.state;
+
+            let newPayment = {
+                worker: worker,
+                year: year,
+                month: month,
+                services: this.props.unpaidServices,
+                extras: extras,
+                total: this.computePaymentTotal(),
+                paymentDate: new Date(paymentDate).getTime(),
+                paymentForm: paymentForm
+            };
+
+            console.log(newPayment);
+            this.props.addPayment(newPayment);
         }
     };
 
@@ -118,6 +146,14 @@ class PaymentForm extends Component {
         let tmpExtras = this.state.extras;
         tmpExtras.splice(index, 1);
         this.setState({ extras: tmpExtras });
+    };
+
+    computePaymentTotal = () => {
+        let total = 0;
+        const { totalCost } = computeServicesMetrics(this.props.unpaidServices);
+        total += totalCost;
+        total += this.computeExtrasTotal();
+        return total;
     };
 
     render() {
@@ -247,7 +283,7 @@ class PaymentForm extends Component {
                         </ExpansionPanel>
                     </Grid>
                     <Grid item xs={12}>
-                        <ExpansionPanel defaultExpanded>
+                        <ExpansionPanel>
                             <ExpansionPanelSummary
                                 expandIcon={<ExpandMoreIcon />}
                             >
@@ -278,7 +314,7 @@ class PaymentForm extends Component {
                                     onClick={this.onAddNewExtraClick}
                                 >
                                     <AddIcon />
-                                    Adicionar Extra
+                                    Adicionar
                                 </Button>
                             </ExpansionPanelActions>
                         </ExpansionPanel>
@@ -287,9 +323,12 @@ class PaymentForm extends Component {
                         <TextField
                             required
                             id="date"
+                            name="paymentDate"
                             label="Data do pagamento"
                             type="date"
+                            value={this.state.paymentDate}
                             className={classes.formControl}
+                            onChange={this.handleValueChange}
                             fullWidth
                             InputLabelProps={{
                                 shrink: true
@@ -323,6 +362,28 @@ class PaymentForm extends Component {
                                 </MenuItem>
                             </Select>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-between"
+                            alignItems="center"
+                        >
+                            <Grid item>
+                                <Typography
+                                    variant="subheading"
+                                    color="secondary"
+                                >
+                                    Total a pagar:
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="headline" align="right">
+                                    {formatMoney(this.computePaymentTotal())}
+                                </Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <div style={{ marginTop: 16, float: "right" }}>
@@ -360,6 +421,9 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchUnpaidServices: (worker, year, month) => {
             dispatch(fetchUnpaidServices(worker, year, month));
+        },
+        addPayment: payment => {
+            dispatch(addPayment(payment));
         }
     };
 };
