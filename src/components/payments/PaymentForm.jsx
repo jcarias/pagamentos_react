@@ -15,7 +15,8 @@ import {
     Divider,
     Avatar,
     Input,
-    TextField
+    TextField,
+    Hidden
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
@@ -26,6 +27,7 @@ import { months_pt, getYears } from "../../utils/dateUtils";
 import ServicesTable from "../ServicesTable";
 import UnpaidServicesTable from "../UnpaidServicesTable";
 import { formatMoney } from "../../utils/StringUtils";
+import UnpaidServicesList from "../UnpaidServicesList";
 
 const styles = theme => ({
     root: {
@@ -201,9 +203,16 @@ class PaymentForm extends Component {
                                 </Typography>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails>
-                                <UnpaidServicesTable
-                                    services={unpaidServices}
-                                />
+                                <Hidden smDown>
+                                    <UnpaidServicesTable
+                                        services={unpaidServices}
+                                    />
+                                </Hidden>
+                                <Hidden mdUp>
+                                    <UnpaidServicesList
+                                        services={unpaidServices}
+                                    />
+                                </Hidden>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
                     </Grid>
