@@ -21,7 +21,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { getWorkerName, getWorker } from "../../utils/DomainUtils";
 import { months_pt, getYears } from "../../utils/dateUtils";
 
-import { fetchPayments } from "../../actions/paymentsActions";
+import { fetchPayments, deletePayment } from "../../actions/paymentsActions";
 import PaymentsList from "./PaymentsList";
 import { isNotEmpty } from "../../utils/commonUtils";
 
@@ -55,7 +55,10 @@ class PaymentsHome extends Component {
         this.state = {
             selWorker: "",
             selYear: "",
-            selMonth: ""
+            selMonth: "",
+            selectedPaymentKey: "",
+            selectedPayment: {},
+            deleteConfirmDialogOpen: false
         };
     }
 
@@ -117,6 +120,29 @@ class PaymentsHome extends Component {
             this.state.selMonth
         );
     }
+
+    showDeleteConfirm = (key, payment) => {
+        this.setState({
+            selectedPaymentKey: key,
+            selectedPayment: payment,
+            deleteConfirmDialogOpen: true
+        });
+    };
+    handleCloseDeleteConfirm = () => {
+        this.setState({
+            selectedPaymentKey: "",
+            selectedPayment: {},
+            deleteConfirmDialogOpen: false
+        });
+    };
+
+    confirmPaymentDelete = () => {
+        const { selectedPaymentKey, selectedPayment } = this.state;
+        this.props.deletePayment(selectedPaymentKey, selectedPayment);
+        this.setState({
+            deleteConfirmDialogOpen: false
+        });
+    };
 
     render() {
         const { classes, workers, paymentsData } = this.props;
@@ -321,6 +347,15 @@ class PaymentsHome extends Component {
                         <PaymentsList
                             payments={paymentsData}
                             workers={workers}
+                            showDeleteConfirm={this.showDeleteConfirm}
+                            handleCloseDeleteConfirm={
+                                this.handleCloseDeleteConfirm
+                            }
+                            deleteConfirmDialogOpen={
+                                this.state.deleteConfirmDialogOpen
+                            }
+                            selectedPayment={this.state.selectedPayment}
+                            confirmDelete={this.confirmPaymentDelete}
                         />
                     ) : (
                         <Typography variant="display1" align="center">
@@ -346,6 +381,9 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchPayments: (worker, year, month) => {
             dispatch(fetchPayments(worker, year, month));
+        },
+        deletePayment: (paymentKey, paymentData) => {
+            dispatch(deletePayment(paymentKey, paymentData));
         }
     };
 };

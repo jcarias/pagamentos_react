@@ -1,7 +1,8 @@
 import {
     FETCH_PAYMENTS,
     REQUEST,
-    FETCH_UNPAID_SERVICES
+    FETCH_UNPAID_SERVICES,
+    DELETE_PAYMENT
 } from "../actions/types";
 
 const PaymentsReducer = (
@@ -25,6 +26,11 @@ const PaymentsReducer = (
             return {
                 ...state,
                 unpaidServices: action.payload,
+                loading: false
+            };
+        case DELETE_PAYMENT:
+            return {
+                ...state,
                 loading: false
             };
         default:

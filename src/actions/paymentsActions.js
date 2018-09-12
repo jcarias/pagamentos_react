@@ -3,7 +3,8 @@ import {
     REQUEST,
     FETCH_PAYMENTS,
     FETCH_UNPAID_SERVICES,
-    EDIT_SERVICE
+    EDIT_SERVICE,
+    DELETE_SERVICE
 } from "./types";
 import { clientSideFilter } from "../utils/commonUtils";
 
@@ -60,6 +61,7 @@ export const fetchPayments = (workerKey, year, month) => async dispatch => {
         });
     });
 };
+
 export const fetchUnpaidServices = (
     workerKey,
     year,
@@ -113,4 +115,22 @@ export const fetchPaymentServices = paymentKey => async dispatch => {
                 payload: retVal
             });
         });
+};
+
+export const deletePayment = (paymentKey, paymentData) => async dispatch => {
+    const { services } = paymentData;
+    if (services) {
+        Object.keys(services).map(key => {
+            servicesRef
+                .child(key)
+                .child("payment")
+                .remove();
+            servicesRef
+                .child(key)
+                .child("paymentDate")
+                .remove();
+        });
+    }
+
+    paymentsRef.child(paymentKey).remove();
 };
