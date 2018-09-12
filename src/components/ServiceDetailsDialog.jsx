@@ -10,11 +10,15 @@ import {
 import { Link } from "react-router-dom";
 import FieldDisplay from "./FieldDisplay";
 import { urls } from "../utils/urlUtils";
-import { getWorkerName, calcServiceCost } from "../utils/DomainUtils";
+import {
+    getWorkerName,
+    calcServiceCost,
+    getWorker
+} from "../utils/DomainUtils";
 import { pad, trail } from "../utils/StringUtils";
 
 const ServiceDetailsDialog = props => {
-    const { serviceDetailsOpen, handleClose, selection } = props;
+    const { serviceDetailsOpen, handleClose, selection, workers } = props;
     const noValue = "---";
     return (
         <Dialog
@@ -30,7 +34,11 @@ const ServiceDetailsDialog = props => {
                     caption="Trabalhador"
                     value={selection && selection.serviceDate}
                     formatter={value =>
-                        value ? getWorkerName(selection.worker) : noValue
+                        value
+                            ? getWorkerName(
+                                  getWorker(workers, selection.worker)
+                              )
+                            : noValue
                     }
                 />
                 <FieldDisplay

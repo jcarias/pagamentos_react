@@ -13,6 +13,11 @@ export const urls = {
         name: "Criar Novo Pagamento",
         path: "/payments/add",
         toolbar: true
+    },
+    updatePayment: {
+        name: "Editar Novo Pagamento",
+        path: "/payments/upadte/:id",
+        toolbar: true
     }
 };
 

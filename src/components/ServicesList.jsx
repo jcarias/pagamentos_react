@@ -196,6 +196,7 @@ class ServicesList extends Component {
                     serviceDetailsOpen={this.state.serviceDetailsOpen}
                     handleClose={this.handleClose}
                     selection={this.state.selection}
+                    workers={workers}
                 />
 
                 <ConfirmDialog
