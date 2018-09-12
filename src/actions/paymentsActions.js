@@ -8,7 +8,6 @@ import {
 import { clientSideFilter } from "../utils/commonUtils";
 
 export const addPayment = newPayment => async dispatch => {
-    debugger;
     var newRef = paymentsRef.push();
     var paymentKey = newRef.getKey();
 
@@ -18,7 +17,7 @@ export const addPayment = newPayment => async dispatch => {
             let service = services[key];
             service.paymentDate = paymentDate;
             service.payment = paymentKey;
-            servicesRef.child(key).update(service);
+            return servicesRef.child(key).update(service);
         });
     }
 

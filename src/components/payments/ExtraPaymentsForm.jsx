@@ -4,7 +4,7 @@ import { TextField, Grid, IconButton } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 const ExtraPaymentsForm = props => {
-    const { classes, extras, handleValueChange, handleDelete } = props;
+    const { extras, handleValueChange, handleDelete } = props;
 
     return (
         <Grid container direction="column">

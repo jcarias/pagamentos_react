@@ -119,7 +119,7 @@ class PaymentsHome extends Component {
     }
 
     render() {
-        const { classes, workers, paymentsData, loading } = this.props;
+        const { classes, workers, paymentsData } = this.props;
         const { selWorker, selYear, selMonth } = this.state;
         return (
             <Grid container direction="column">
@@ -178,7 +178,7 @@ class PaymentsHome extends Component {
                                                 color="primary"
                                             />
                                         )}
-                                        {selMonth && (
+                                        {selMonth !== "" && (
                                             <Chip
                                                 label={months_pt[selMonth]}
                                                 onDelete={() =>

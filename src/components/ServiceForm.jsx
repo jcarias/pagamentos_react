@@ -62,7 +62,6 @@ class ServiceForm extends Component {
                     let serviceCost =
                         (Number(hours) + Number(minutes) / 60) *
                         Number(priceHour);
-                    console.log(hours, minutes, priceHour, serviceCost);
                     this.setState({
                         service: {
                             ...this.state.service,

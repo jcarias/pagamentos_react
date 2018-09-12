@@ -9,21 +9,13 @@ import {
     ExpansionPanelActions,
     Button,
     Divider,
-    List,
-    ListItem,
-    ListItemText,
     Hidden
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { dateFormatter, formatMoney } from "../../utils/StringUtils";
 import { months_pt } from "../../utils/dateUtils";
-import {
-    getWorker,
-    getWorkerName,
-    paymentFormats
-} from "../../utils/DomainUtils";
-import FieldValueDisplay from "../FieldValueDisplay";
+import { getWorker, getWorkerName } from "../../utils/DomainUtils";
 import UnpaidServicesTable from "../UnpaidServicesTable";
 import PaymentFieldsDisplay from "./PaymentFieldsDisplay";
 import UnpaidServicesList from "../UnpaidServicesList";

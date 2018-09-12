@@ -60,9 +60,7 @@ class ServicesList extends Component {
     };
 
     showDeleteDialog = key => {
-        this.setState({ deleteDialogOpen: true, selServiceKey: key }, () => {
-            console.log(this.state);
-        });
+        this.setState({ deleteDialogOpen: true, selServiceKey: key });
     };
 
     deleteDialogConfirm = () => {

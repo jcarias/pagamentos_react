@@ -12,7 +12,6 @@ import MoneyIcon from "@material-ui/icons/AttachMoneyRounded";
 import { formatMoney } from "../../utils/StringUtils";
 
 const ExtraPaymentsList = ({ extraPayments, noFoundMessage }) => {
-    console.log(extraPayments);
     return (
         <React.Fragment>
             {isNotEmpty(extraPayments) && (

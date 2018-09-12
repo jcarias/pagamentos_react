@@ -113,7 +113,6 @@ class PaymentForm extends Component {
                 paymentForm: paymentForm
             };
 
-            console.log(newPayment);
             this.props.addPayment(newPayment);
         }
     };

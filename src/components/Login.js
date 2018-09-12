@@ -18,7 +18,6 @@ class Login extends Component {
         FirebaseService.createUser(email, password)
             .then(user => {
                 this.props.history.push(urls.home.path);
-                console.log(user);
             })
             .catch(error => {
                 alert(error.message);
