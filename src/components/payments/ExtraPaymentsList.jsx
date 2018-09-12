@@ -1,64 +1,44 @@
 import React from "react";
-import { TextField, Grid, IconButton } from "@material-ui/core";
+import {
+    List,
+    ListItemText,
+    ListItem,
+    Typography,
+    ListItemIcon,
+    Divider
+} from "@material-ui/core";
+import { isNotEmpty, isEmpty } from "../../utils/commonUtils";
+import MoneyIcon from "@material-ui/icons/AttachMoneyRounded";
+import { formatMoney } from "../../utils/StringUtils";
 
-import DeleteIcon from "@material-ui/icons/Delete";
-
-const ExtraPaymentsList = props => {
-    const { classes, extras, handleValueChange, handleDelete } = props;
-
+const ExtraPaymentsList = ({ extraPayments, noFoundMessage }) => {
+    console.log(extraPayments);
     return (
-        <Grid container direction="column">
-            {extras &&
-                extras.map((extraPayment, index) => {
-                    return (
-                        <Grid
-                            key={index}
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="flex-end"
-                            spacing={8}
-                        >
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Descritivo"
-                                    value={extraPayment.description}
-                                    name="description"
-                                    onChange={e => handleValueChange(index, e)}
-                                    InputLabelProps={{
-                                        shrink: true
-                                    }}
-                                    margin="normal"
-                                    autoFocus={extraPayment.description === ""}
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item xs={5}>
-                                <TextField
-                                    label="Valor"
-                                    value={extraPayment.value}
-                                    name="value"
-                                    onChange={e => handleValueChange(index, e)}
-                                    type="number"
-                                    InputLabelProps={{
-                                        shrink: true
-                                    }}
-                                    margin="normal"
-                                    autoFocus={extraPayment.value === ""}
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item xs={1}>
-                                <IconButton>
-                                    <DeleteIcon
-                                        onClick={() => handleDelete(index)}
-                                    />
-                                </IconButton>
-                            </Grid>
-                        </Grid>
-                    );
-                })}
-        </Grid>
+        <React.Fragment>
+            {isNotEmpty(extraPayments) && (
+                <List>
+                    {extraPayments.map((extra, index) => {
+                        return (
+                            <ListItem key={index} divider dense>
+                                <ListItemIcon>
+                                    <MoneyIcon />
+                                </ListItemIcon>
+                                <ListItemText>{extra.description}</ListItemText>
+                                <ListItemText>
+                                    {formatMoney(extra.value)}
+                                </ListItemText>
+                                <Divider />
+                            </ListItem>
+                        );
+                    })}
+                </List>
+            )}
+            {isEmpty(extraPayments) && (
+                <Typography variant="body1">
+                    {noFoundMessage || "Sem extras."}
+                </Typography>
+            )}
+        </React.Fragment>
     );
 };
 

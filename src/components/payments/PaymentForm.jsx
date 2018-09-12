@@ -21,12 +21,16 @@ import AddIcon from "@material-ui/icons/Add";
 
 import { fetchUnpaidServices, addPayment } from "../../actions/paymentsActions";
 
-import { getWorkerName, computeServicesMetrics } from "../../utils/DomainUtils";
+import {
+    getWorkerName,
+    computeServicesMetrics,
+    paymentFormats
+} from "../../utils/DomainUtils";
 import { months_pt, getYears } from "../../utils/dateUtils";
 import UnpaidServicesTable from "../UnpaidServicesTable";
 import { formatMoney } from "../../utils/StringUtils";
 import UnpaidServicesList from "../UnpaidServicesList";
-import ExtraPaymentsList from "./ExtraPaymentsList";
+import ExtraPaymentsForm from "./ExtraPaymentsForm";
 
 const styles = theme => ({
     root: {
@@ -299,7 +303,7 @@ class PaymentForm extends Component {
                                 </Typography>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails>
-                                <ExtraPaymentsList
+                                <ExtraPaymentsForm
                                     extras={this.state.extras}
                                     handleValueChange={
                                         this.handleExtraValueChange
@@ -353,13 +357,14 @@ class PaymentForm extends Component {
                                     id: "paymentForm"
                                 }}
                             >
-                                <MenuItem value="">
-                                    <em>Desconhecido</em>
-                                </MenuItem>
-                                <MenuItem value="money">Dinheiro</MenuItem>
-                                <MenuItem value="tranfer">
-                                    Tranferência Bancária
-                                </MenuItem>
+                                {paymentFormats &&
+                                    Object.keys(paymentFormats).map(key => {
+                                        return (
+                                            <MenuItem key={key} value={key}>
+                                                {paymentFormats[key]}
+                                            </MenuItem>
+                                        );
+                                    })}
                             </Select>
                         </FormControl>
                     </Grid>

@@ -98,3 +98,9 @@ export const calcSubsides = (services, year) => {
         thirteenth: semesters.total2ndSemester / 6
     };
 };
+
+export const paymentFormats = {
+    unknown: "Desconhecido",
+    tranf: "Transferência Bancária",
+    money: "Dinheiro"
+};

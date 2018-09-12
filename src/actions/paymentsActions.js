@@ -27,6 +27,7 @@ export const addPayment = newPayment => async dispatch => {
 
 export const fetchPayments = (workerKey, year, month) => async dispatch => {
     dispatch({ type: REQUEST });
+
     paymentsRef.on("value", snapshot => {
         let retVal = snapshot.val();
 
@@ -45,7 +46,7 @@ export const fetchPayments = (workerKey, year, month) => async dispatch => {
                     Number(payment.year) === Number(year)
             );
         }
-        if (month) {
+        if (month !== "") {
             retVal = clientSideFilter(
                 retVal,
                 payment =>

@@ -13,3 +13,28 @@ export const clientSideFilter = (obj, predicate) => {
         .filter(key => predicate(obj[key]))
         .reduce((res, key) => ((res[key] = obj[key]), res), {});
 };
+
+/**
+ * Tests if the value is empty.
+ * @param {*} value
+ * @returns {Boolean} **true** if the `value` is null or undefined, or if `value` is an empty object or array. **false** otherwise.
+ */
+export const isEmpty = value => {
+    if (value === null || value === undefined) {
+        return true;
+    }
+
+    if (value.constructor === Object) {
+        return Object.keys(value).length === 0;
+    }
+
+    if (!Array.isArray(value) || !value.length) {
+        return true;
+    }
+
+    return false;
+};
+
+export const isNotEmpty = value => {
+    return !isEmpty(value);
+};
