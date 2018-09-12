@@ -83,10 +83,7 @@ class HomePage extends Component {
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} lg={3}>
                     <Card>
-                        <CardActionArea
-                            component={Link}
-                            to={urls.services.path}
-                        >
+                        <CardActionArea component={Link} to={urls.workers.path}>
                             <CardContent className={classes.widgetHeader}>
                                 <PersonIcon className={classes.widgetMedia} />
                                 <Typography
@@ -107,7 +104,7 @@ class HomePage extends Component {
                             <Button
                                 color="primary"
                                 component={Link}
-                                to={urls.services.path}
+                                to={urls.workers.path}
                             >
                                 Ver
                             </Button>

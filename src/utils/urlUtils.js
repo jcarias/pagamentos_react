@@ -18,6 +18,11 @@ export const urls = {
         name: "Editar Pagamento",
         path: "/payments/upadte/:id",
         toolbar: true
+    },
+    workers: {
+        name: "Trabalhadores",
+        path: "/workers",
+        toolbar: true
     }
 };
 

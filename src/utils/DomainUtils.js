@@ -24,7 +24,10 @@ export const getWorkerName = worker => {
 };
 
 export const getWorkerAvatarInitials = worker => {
-    return worker.fname + (worker.lname ? " " + worker.lname : "");
+    return (
+        worker.fname.substring(0, 1) +
+        (worker.lname ? worker.lname.substring(0, 1) : "")
+    );
 };
 
 export const computeServicesMetrics = services => {
