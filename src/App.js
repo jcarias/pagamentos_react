@@ -156,6 +156,16 @@ class App extends Component {
                                 />
                             )}
                         />
+                        <Route
+                            path={urls.updatePayment.path}
+                            render={props => (
+                                <PaymentForm
+                                    workers={workersData}
+                                    services={servicesData}
+                                    {...props}
+                                />
+                            )}
+                        />
                     </div>
                 </MuiThemeProvider>
             </React.Fragment>

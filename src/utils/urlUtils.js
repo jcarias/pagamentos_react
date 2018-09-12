@@ -15,7 +15,7 @@ export const urls = {
         toolbar: true
     },
     updatePayment: {
-        name: "Editar Novo Pagamento",
+        name: "Editar Pagamento",
         path: "/payments/upadte/:id",
         toolbar: true
     }

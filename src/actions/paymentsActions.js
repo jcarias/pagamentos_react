@@ -65,14 +65,20 @@ export const fetchPayments = (workerKey, year, month) => async dispatch => {
 export const fetchUnpaidServices = (
     workerKey,
     year,
-    month
+    month,
+    paymentKey
 ) => async dispatch => {
     dispatch({ type: REQUEST });
 
-    servicesRef.on("value", snapshot => {
+    servicesRef.orderByChild("serviceDate").on("value", snapshot => {
         let retVal = snapshot.val();
 
-        retVal = clientSideFilter(retVal, service => !service.paymentDate);
+        retVal = clientSideFilter(
+            retVal,
+            service =>
+                !service.paymentDate ||
+                (service.paymentDate && service.payment === paymentKey)
+        );
 
         if (workerKey) {
             retVal = clientSideFilter(
@@ -117,8 +123,7 @@ export const fetchPaymentServices = paymentKey => async dispatch => {
         });
 };
 
-export const deletePayment = (paymentKey, paymentData) => async dispatch => {
-    const { services } = paymentData;
+const deleteServicesPaymentInfo = services => {
     if (services) {
         Object.keys(services).map(key => {
             servicesRef
@@ -129,8 +134,30 @@ export const deletePayment = (paymentKey, paymentData) => async dispatch => {
                 .child(key)
                 .child("paymentDate")
                 .remove();
+            return true;
         });
+    }
+};
+
+export const deletePayment = (paymentKey, paymentData) => async dispatch => {
+    const { services } = paymentData;
+    if (services) {
+        deleteServicesPaymentInfo(services);
     }
 
     paymentsRef.child(paymentKey).remove();
+};
+
+const deletePaymentServices = paymentKey => {
+    servicesRef
+        .orderByChild("payment")
+        .equalTo(paymentKey)
+        .once("value", snapshot => {
+            deleteServicesPaymentInfo(snapshot.val());
+        });
+};
+
+export const updatePayment = (paymentKey, paymentData) => async dispatch => {
+    deletePaymentServices(paymentKey);
+    paymentsRef.child(paymentKey).update(paymentData);
 };

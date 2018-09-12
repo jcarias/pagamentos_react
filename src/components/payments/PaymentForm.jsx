@@ -19,7 +19,11 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 
-import { fetchUnpaidServices, addPayment } from "../../actions/paymentsActions";
+import {
+    fetchUnpaidServices,
+    addPayment,
+    updatePayment
+} from "../../actions/paymentsActions";
 
 import {
     getWorkerName,
@@ -28,9 +32,11 @@ import {
 } from "../../utils/DomainUtils";
 import { months_pt, getYears } from "../../utils/dateUtils";
 import UnpaidServicesTable from "../UnpaidServicesTable";
-import { formatMoney } from "../../utils/StringUtils";
+import { formatMoney, dateFormatter } from "../../utils/StringUtils";
 import UnpaidServicesList from "../UnpaidServicesList";
 import ExtraPaymentsForm from "./ExtraPaymentsForm";
+import { paymentsRef } from "../../utils/firebaseUtils";
+import { isNotEmpty } from "../../utils/commonUtils";
 
 const styles = theme => ({
     root: {
@@ -93,6 +99,7 @@ class PaymentForm extends Component {
     handleSubmit = event => {
         if (event) {
             event.preventDefault();
+
             const {
                 worker,
                 year,
@@ -112,22 +119,62 @@ class PaymentForm extends Component {
                 paymentDate: new Date(paymentDate).getTime(),
                 paymentForm: paymentForm
             };
+            if (this.props.match.params.id) {
+                this.props.updatePayment(
+                    this.props.match.params.id,
+                    newPayment
+                );
+            } else {
+                this.props.addPayment(newPayment);
+            }
 
-            this.props.addPayment(newPayment);
+            this.props.history.goBack();
         }
     };
 
     fetchServices = () => {
         const { worker, year, month } = this.state;
-        this.props.fetchUnpaidServices(worker, year, month);
+        this.props.fetchUnpaidServices(
+            worker,
+            year,
+            month,
+            this.props.match.params.id
+        );
     };
 
     componentDidMount = () => {
         this.fetchServices();
+
+        if (this.props.match.params.id) {
+            paymentsRef
+                .child(this.props.match.params.id)
+                .once("value", snapshot => {
+                    let paymentToUpdate = snapshot.val();
+
+                    this.setState(
+                        {
+                            ...this.state,
+                            worker: paymentToUpdate.worker,
+                            year: paymentToUpdate.year,
+                            month: paymentToUpdate.month,
+                            services: paymentToUpdate.services,
+                            extras: paymentToUpdate.extras,
+                            total: paymentToUpdate.total,
+                            paymentDate: dateFormatter(
+                                new Date(paymentToUpdate.paymentDate)
+                            ),
+                            paymentForm: paymentToUpdate.paymentForm
+                        },
+                        () => {
+                            this.fetchServices();
+                        }
+                    );
+                });
+        }
     };
 
     onAddNewExtraClick = () => {
-        let extras = this.state.extras;
+        let extras = this.state.extras || [];
         extras.push({ description: "", value: 0 });
         this.setState({ ...this.state, extras: extras });
     };
@@ -141,7 +188,9 @@ class PaymentForm extends Component {
 
     computeExtrasTotal = () => {
         let total = 0.0;
-        this.state.extras.map(extra => (total += Number(extra.value)));
+        if (isNotEmpty(this.state.extras)) {
+            this.state.extras.map(extra => (total += Number(extra.value)));
+        }
         return total;
     };
 
@@ -295,7 +344,10 @@ class PaymentForm extends Component {
                                     style={{ flex: 1 }}
                                     color="textSecondary"
                                 >
-                                    {this.state.extras.length} Extras
+                                    {this.state.extras
+                                        ? this.state.extras.length
+                                        : 0}{" "}
+                                    Extras
                                 </Typography>
                                 <Typography variant="headline">
                                     {formatMoney(this.computeExtrasTotal())}
@@ -423,11 +475,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchUnpaidServices: (worker, year, month) => {
-            dispatch(fetchUnpaidServices(worker, year, month));
+        fetchUnpaidServices: (worker, year, month, paymentKey) => {
+            dispatch(fetchUnpaidServices(worker, year, month, paymentKey));
         },
         addPayment: payment => {
             dispatch(addPayment(payment));
+        },
+        updatePayment: (key, payment) => {
+            dispatch(updatePayment(key, payment));
         }
     };
 };

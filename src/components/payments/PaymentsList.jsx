@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import {
     Grid,
@@ -21,6 +22,8 @@ import PaymentFieldsDisplay from "./PaymentFieldsDisplay";
 import UnpaidServicesList from "../UnpaidServicesList";
 import ExtraPaymentsList from "./ExtraPaymentsList";
 import ConfirmDialog from "../ConfirmDialog";
+import { urls } from "../../utils/urlUtils";
+import { isNotEmpty } from "../../utils/commonUtils";
 
 const styles = theme => ({
     root: {
@@ -170,20 +173,30 @@ const PaymentsList = props => {
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
-                                                <Hidden smDown>
-                                                    <UnpaidServicesTable
-                                                        services={
-                                                            payment.services
-                                                        }
-                                                    />
-                                                </Hidden>
-                                                <Hidden smUp>
-                                                    <UnpaidServicesList
-                                                        services={
-                                                            payment.services
-                                                        }
-                                                    />
-                                                </Hidden>
+                                                {isNotEmpty(
+                                                    payment.services
+                                                ) ? (
+                                                    <React.Fragment>
+                                                        <Hidden smDown>
+                                                            <UnpaidServicesTable
+                                                                services={
+                                                                    payment.services
+                                                                }
+                                                            />
+                                                        </Hidden>
+                                                        <Hidden smUp>
+                                                            <UnpaidServicesList
+                                                                services={
+                                                                    payment.services
+                                                                }
+                                                            />
+                                                        </Hidden>
+                                                    </React.Fragment>
+                                                ) : (
+                                                    <Typography>
+                                                        Nenhum serviço.
+                                                    </Typography>
+                                                )}
                                             </Grid>
                                             <Grid item>
                                                 <Typography variant="subheading">
@@ -208,9 +221,15 @@ const PaymentsList = props => {
                                         <Button
                                             variant="outlined"
                                             color="primary"
+                                            component={Link}
+                                            to={urls.updatePayment.path.replace(
+                                                ":id",
+                                                key
+                                            )}
                                         >
                                             Editar
                                         </Button>
+
                                         <Button
                                             variant="outlined"
                                             color="secondary"
