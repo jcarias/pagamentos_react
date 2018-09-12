@@ -60,8 +60,11 @@ const PaymentsList = props => {
                 confirmFn={confirmDelete}
             >
                 <Typography gutterBottom>
-                    Tem a certeza que deseja eliminar o pagamento de ... no
-                    valor de ?
+                    Tem a certeza que deseja eliminar o pagamento de{" "}
+                    {months_pt[selectedPayment.month] +
+                        " " +
+                        selectedPayment.year}{" "}
+                    no valor de {formatMoney(selectedPayment.total)}?
                 </Typography>
                 <Typography variant="caption">
                     Atenção: Esta operação é irreversível!
