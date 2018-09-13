@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
     Table,
     TableHead,
@@ -12,6 +13,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { isNotEmpty } from "../../utils/commonUtils";
 import { formatMoney } from "../../utils/StringUtils";
+import { urls } from "../../utils/urlUtils";
 
 const WorkersTable = ({ workers }) => {
     return (
@@ -38,7 +40,13 @@ const WorkersTable = ({ workers }) => {
                                 </TableCell>
                                 <TableCell>{w.bankAccountNumber}</TableCell>
                                 <TableCell numeric>
-                                    <IconButton>
+                                    <IconButton
+                                        component={Link}
+                                        to={urls.updateWorker.path.replace(
+                                            ":id",
+                                            key
+                                        )}
+                                    >
                                         <EditIcon />
                                     </IconButton>
                                     <IconButton>

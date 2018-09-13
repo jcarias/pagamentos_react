@@ -13,3 +13,14 @@ export const fetchWorkers = () => async dispatch => {
         });
     });
 };
+
+export const updateWorker = (key, worker) => async dispatch => {
+    workersRef.child(key).set(worker);
+};
+
+export const deleteWorker = key => async dispatch => {
+    //TODO: Delete Worker Services
+    //TODO: Delete Worker Payments
+    //Delete the actual Worker
+    //workersRef.child(key).remove();
+};

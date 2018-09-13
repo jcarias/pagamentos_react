@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { TextField, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { addWorker, updateWorker } from "../../actions/workersActions";
+import { workersRef } from "../../utils/firebaseUtils";
 
 const styles = theme => ({
     root: {
@@ -40,21 +43,44 @@ class WorkerForm extends Component {
         if (event) {
             event.preventDefault();
 
-            if (this.props.match.id) {
-                //update
-                console.log("update");
+            let worker = {
+                fname: this.state.fname,
+                lname: this.state.lname,
+                priceHour: Number(this.state.priceHour),
+                bankAccountNumber: this.state.bankAccountNumber
+            };
+
+            if (this.props.match.params.id) {
+                this.props.updateWorker(this.props.match.params.id, worker);
             } else {
-                //insert
-                console.log("insert");
+                this.props.createWorker(worker);
             }
 
             this.props.history.goBack();
         }
     };
+    teste = arg => {
+        console.log(arg);
+    };
+
+    componentDidMount = () => {
+        if (this.props.match.params.id) {
+            workersRef
+                .child(this.props.match.params.id)
+                .once("value", snapshot => {
+                    let worker = snapshot.val();
+                    this.setState({
+                        fname: worker.fname,
+                        lname: worker.lname,
+                        priceHour: worker.priceHour,
+                        bankAccountNumber: worker.bankAccountNumber
+                    });
+                });
+        }
+    };
 
     render() {
         const { classes } = this.props;
-        console.log(this.props);
         return (
             <form onSubmit={this.handleSubmit} className={classes.root}>
                 <TextField
@@ -112,4 +138,22 @@ class WorkerForm extends Component {
     }
 }
 
-export default withStyles(styles)(WorkerForm);
+const mapStateToProps = state => {
+    return {};
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        createWorker: worker => {
+            dispatch(addWorker(worker));
+        },
+        updateWorker: (key, worker) => {
+            dispatch(updateWorker(key, worker));
+        }
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(WorkerForm));

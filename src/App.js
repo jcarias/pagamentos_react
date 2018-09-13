@@ -185,6 +185,12 @@ class App extends Component {
                                 <WorkerForm theme={theme} {...props} />
                             )}
                         />
+                        <Route
+                            path={urls.updateWorker.path}
+                            render={props => (
+                                <WorkerForm theme={theme} {...props} />
+                            )}
+                        />
                     </div>
                 </MuiThemeProvider>
             </React.Fragment>

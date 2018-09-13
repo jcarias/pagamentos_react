@@ -28,6 +28,11 @@ export const urls = {
         name: "Criar Novo Trabalhador",
         path: "/workers/add",
         toolbar: true
+    },
+    updateWorker: {
+        name: "Editar Trabalhador",
+        path: "/workers/update/:id",
+        toolbar: true
     }
 };
 

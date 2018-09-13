@@ -20,7 +20,6 @@ const styles = theme => ({
 });
 
 const WorkersHome = ({ workers, theme, classes }) => {
-    console.log(workers);
     return (
         <React.Fragment>
             <Paper className={classes.root} />
