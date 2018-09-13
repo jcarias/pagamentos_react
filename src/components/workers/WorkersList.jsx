@@ -1,18 +1,24 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
     List,
     ListItem,
     ListItemAvatar,
     Avatar,
     ListItemText,
-    Typography
+    Typography,
+    ListItemSecondaryAction,
+    IconButton
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 import {
     getWorkerAvatarInitials,
     getWorkerName
 } from "../../utils/DomainUtils";
 import { formatMoney } from "../../utils/StringUtils";
 import { isNotEmpty } from "../../utils/commonUtils";
+import { urls } from "../../utils/urlUtils";
 
 const WorkersList = ({ workers }) => {
     return (
@@ -21,7 +27,13 @@ const WorkersList = ({ workers }) => {
                 Object.keys(workers).map(key => {
                     let w = workers[key];
                     return (
-                        <ListItem key={key} button divider>
+                        <ListItem
+                            key={key}
+                            button
+                            divider
+                            component={Link}
+                            to={urls.updateWorker.path.replace(":id", key)}
+                        >
                             <ListItemAvatar>
                                 <Avatar>{getWorkerAvatarInitials(w)}</Avatar>
                             </ListItemAvatar>
@@ -29,6 +41,11 @@ const WorkersList = ({ workers }) => {
                                 primary={getWorkerName(w)}
                                 secondary={formatMoney(w.priceHour)}
                             />
+                            <ListItemSecondaryAction>
+                                <IconButton>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItemSecondaryAction>
                         </ListItem>
                     );
                 })

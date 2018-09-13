@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Paper, Hidden } from "@material-ui/core";
+import { Button, Hidden } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import WorkersTable from "./WorkersTable";
@@ -22,7 +22,6 @@ const styles = theme => ({
 const WorkersHome = ({ workers, theme, classes }) => {
     return (
         <React.Fragment>
-            <Paper className={classes.root} />
             <Hidden smDown>
                 <WorkersTable workers={workers} className={classes.root} />
             </Hidden>
