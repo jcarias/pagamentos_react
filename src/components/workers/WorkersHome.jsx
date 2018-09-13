@@ -1,9 +1,11 @@
 import React from "react";
-import { Typography, Button, Paper, Hidden } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { Button, Paper, Hidden } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import WorkersTable from "./WorkersTable";
 import WorkersList from "./WorkersList";
+import { urls } from "../../utils/urlUtils";
 
 const styles = theme => ({
     root: {
@@ -31,6 +33,8 @@ const WorkersHome = ({ workers, theme, classes }) => {
             <Button
                 variant="fab"
                 color="primary"
+                component={Link}
+                to={urls.addWorker.path}
                 style={{
                     position: "fixed",
                     bottom: theme.spacing.unit * 2,
