@@ -259,7 +259,7 @@ class ServiceForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        workersData: state.WorkersReducer,
+        workersData: state.WorkersReducer.workers,
         service: state.ServicesReducer.service
     };
 };

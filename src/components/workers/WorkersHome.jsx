@@ -56,7 +56,7 @@ class WorkersHome extends Component {
     };
 
     render() {
-        const { workers, theme, classes } = this.props;
+        const { workers, theme, classes, loading } = this.props;
         return (
             <React.Fragment>
                 <Hidden smDown>
@@ -110,7 +110,8 @@ class WorkersHome extends Component {
 
 const mapStateToProps = state => {
     return {
-        workers: state.WorkersReducer
+        workers: state.WorkersReducer.workers,
+        loading: state.WorkersReducer.loading
     };
 };
 

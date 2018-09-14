@@ -1,11 +1,12 @@
 import { workersRef, servicesRef, paymentsRef } from "../utils/firebaseUtils";
-import { FETCH_WORKERS } from "./types";
+import { FETCH_WORKERS, REQUEST } from "./types";
 
 export const addWorker = newWorker => async dispatch => {
     workersRef.push().set(newWorker);
 };
 
 export const fetchWorkers = () => async dispatch => {
+    dispatch({ type: REQUEST });
     workersRef.on("value", snapshot => {
         dispatch({
             type: FETCH_WORKERS,
@@ -19,6 +20,7 @@ export const updateWorker = (key, worker) => async dispatch => {
 };
 
 export const deleteWorker = key => async dispatch => {
+    dispatch({ type: REQUEST });
     console.log("Delete worker: " + key);
 
     servicesRef

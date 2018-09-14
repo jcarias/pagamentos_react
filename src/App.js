@@ -38,6 +38,7 @@ class App extends Component {
         const {
             servicesData,
             servicesLoading,
+            workersLoading,
             workersData,
             servicesFilters
         } = this.props;
@@ -115,7 +116,7 @@ class App extends Component {
                             )}
                         />
 
-                        {servicesLoading && (
+                        {(servicesLoading || workersLoading) && (
                             <div
                                 style={{
                                     position: "fixed",
@@ -203,7 +204,8 @@ const mapStateToProps = state => {
         servicesLoading: state.ServicesReducer.loading,
         servicesFilters: state.ServicesReducer.filters,
         servicesData: state.ServicesReducer.services,
-        workersData: state.WorkersReducer
+        workersData: state.WorkersReducer.workers,
+        workersLoading: state.WorkersReducer.loading
     };
 };
 
