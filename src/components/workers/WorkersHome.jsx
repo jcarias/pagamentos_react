@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Button, Hidden } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -6,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import WorkersTable from "./WorkersTable";
 import WorkersList from "./WorkersList";
 import { urls } from "../../utils/urlUtils";
+import { deleteWorker } from "../../actions/workersActions";
 
 const styles = theme => ({
     root: {
@@ -19,14 +21,14 @@ const styles = theme => ({
     }
 });
 
-const WorkersHome = ({ workers, theme, classes }) => {
+const WorkersHome = ({ workers, theme, classes, deleteWorker }) => {
     return (
         <React.Fragment>
             <Hidden smDown>
                 <WorkersTable workers={workers} className={classes.root} />
             </Hidden>
             <Hidden smUp>
-                <WorkersList workers={workers} />
+                <WorkersList workers={workers} deleteWorkerFn={deleteWorker} />
             </Hidden>
             <Button
                 variant="fab"
@@ -45,4 +47,21 @@ const WorkersHome = ({ workers, theme, classes }) => {
     );
 };
 
-export default withStyles(styles)(WorkersHome);
+const mapStateToProps = state => {
+    return {
+        workers: state.WorkersReducer
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        deleteWorker: workerKey => {
+            dispatch(deleteWorker(workerKey));
+        }
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(WorkersHome));

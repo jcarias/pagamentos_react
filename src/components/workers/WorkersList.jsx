@@ -20,7 +20,7 @@ import { formatMoney } from "../../utils/StringUtils";
 import { isNotEmpty } from "../../utils/commonUtils";
 import { urls } from "../../utils/urlUtils";
 
-const WorkersList = ({ workers }) => {
+const WorkersList = ({ workers, deleteWorkerFn }) => {
     return (
         <List>
             {isNotEmpty(workers) ? (
@@ -42,7 +42,7 @@ const WorkersList = ({ workers }) => {
                                 secondary={formatMoney(w.priceHour)}
                             />
                             <ListItemSecondaryAction>
-                                <IconButton>
+                                <IconButton onClick={() => deleteWorkerFn(key)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>

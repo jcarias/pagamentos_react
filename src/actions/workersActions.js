@@ -1,4 +1,4 @@
-import { workersRef } from "../utils/firebaseUtils";
+import { workersRef, servicesRef, paymentsRef } from "../utils/firebaseUtils";
 import { FETCH_WORKERS } from "./types";
 
 export const addWorker = newWorker => async dispatch => {
@@ -19,8 +19,35 @@ export const updateWorker = (key, worker) => async dispatch => {
 };
 
 export const deleteWorker = key => async dispatch => {
-    //TODO: Delete Worker Services
-    //TODO: Delete Worker Payments
+    console.log("Delete worker: " + key);
+
+    servicesRef
+        .orderByChild("worker")
+        .equalTo(key)
+        .once("value", snapshot => {
+            let services = snapshot.val();
+            if (services) {
+                Object.keys(services).map(key => {
+                    servicesRef.child(key).remove();
+                    return true;
+                });
+            }
+
+            // If the worker has services he might have payments
+            paymentsRef
+                .orderByChild("worker")
+                .equalTo(key)
+                .once("value", snapshot => {
+                    let payments = snapshot.val();
+                    if (payments) {
+                        Object.keys(payments).map(key => {
+                            paymentsRef.child(key).remove();
+                            return true;
+                        });
+                    }
+                });
+        });
+
     //Delete the actual Worker
-    //workersRef.child(key).remove();
+    workersRef.child(key).remove();
 };
