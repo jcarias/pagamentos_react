@@ -10,11 +10,11 @@ import store from "./store";
 import "typeface-roboto";
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Router>
-            <Route path={urls.home.path} component={App} />
-        </Router>
-    </Provider>,
-    document.getElementById("root")
+  <Provider store={store}>
+    <Router>
+      <Route path={urls.home.path} component={App} />
+    </Router>
+  </Provider>,
+  document.getElementById("root")
 );
 registerServiceWorker();
