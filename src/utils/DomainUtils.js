@@ -101,3 +101,23 @@ export const paymentFormats = {
   tranf: "Transferência Bancária",
   money: "Dinheiro"
 };
+
+export const calcYearTotals = yearData => {
+  let data = {
+    totalAmount: 0,
+    totalAmountPayed: 0
+  };
+
+  if (isNotEmpty(yearData)) {
+    Object.keys(yearData).map(key => {
+      let service = yearData[key];
+      if (service.payment && service.paymentDate) {
+        data.totalAmountPayed += calcServiceCost(service);
+      } else {
+        data.totalAmount += calcServiceCost(service);
+      }
+    });
+  }
+
+  return data;
+};
