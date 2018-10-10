@@ -40,9 +40,8 @@ export const computeServicesMetrics = services => {
     avgCost: 0
   };
 
-  if (
-    isNotEmpty(services) &&
-    Object.keys(services).map(key => {
+  if (isNotEmpty(services)) {
+    Object.keys(services).forEach(function(key) {
       let service = services[key];
       let serviceCost = calcServiceCost(service);
       metrics.count += 1;
@@ -60,10 +59,9 @@ export const computeServicesMetrics = services => {
             ? serviceCost
             : metrics.max;
       metrics.avgCost = metrics.totalCost / metrics.count;
-    })
-  ) {
-    return metrics;
+    });
   }
+
   return metrics;
 };
 
@@ -109,7 +107,7 @@ export const calcYearTotals = yearData => {
   };
 
   if (isNotEmpty(yearData)) {
-    Object.keys(yearData).map(key => {
+    Object.keys(yearData).forEach(function(key) {
       let service = yearData[key];
       if (service.payment && service.paymentDate) {
         data.totalAmountPayed += calcServiceCost(service);

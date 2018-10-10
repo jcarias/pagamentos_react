@@ -20,9 +20,7 @@ import { isEmpty } from "../../utils/commonUtils";
 
 const ServicesWidget = props => {
   const { classes, year, month, services } = props;
-  const { count, totalCost, min, max, avgCost } = computeServicesMetrics(
-    services
-  );
+  const { count, totalCost } = computeServicesMetrics(services);
   return (
     <Card>
       <CardActionArea component={Link} to={urls.services.path}>

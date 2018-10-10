@@ -56,7 +56,7 @@ class WorkersHome extends Component {
   };
 
   render() {
-    const { workers, theme, classes, loading } = this.props;
+    const { workers, theme, classes } = this.props;
     return (
       <React.Fragment>
         <Hidden smUp implementation="css">

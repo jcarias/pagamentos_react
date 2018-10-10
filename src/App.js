@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Route, Link, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { fetchServices, deleteService } from "./actions/servicesActions";
 import { fetchWorkers } from "./actions/workersActions";
-import { AppBar, Button, CircularProgress } from "@material-ui/core";
+import { AppBar, CircularProgress } from "@material-ui/core";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import blue from "@material-ui/core/colors/blue";
