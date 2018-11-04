@@ -142,17 +142,19 @@ class ServicesList extends Component {
               </Grid>
               <Grid item xs={2}>
                 <Button
-                  variant="fab"
+                  variant="extendedFab"
                   color="inherit"
                   component={Link}
                   to={urls.addService.path}
+                  style={{ flex: 1 }}
                 >
                   <AddIcon />
+                  Adicionar
                 </Button>
               </Grid>
             </Grid>
           </Grid>
-          <Divider />
+
           <Grid item>
             <Hidden mdUp>
               <List
